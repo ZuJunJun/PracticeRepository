@@ -47,7 +47,7 @@ public class XCircleImageView extends ImageView {
         return type;
     }
 
-    public void setmBorderColor(int mBorderColor) {
+    public void setBorderColor(int mBorderColor) {
         this.mBorderColor = mBorderColor;
         invalidate();
     }
@@ -78,20 +78,22 @@ public class XCircleImageView extends ImageView {
         mBorderWidth = a.getDimension(R.styleable.XCircleImageView_border_width, 0);
         mBorderColor = a.getColor(R.styleable.XCircleImageView_border_color, Color.RED);
         a.recycle();
-        //图片paint
-        mBitmapPaint = new Paint();
-        mBitmapPaint.setAntiAlias(true);
-        //边框paint
-        mBorderPaint = new Paint();
-        mBorderPaint.setAntiAlias(true);
-        mBorderPaint.setStyle(Paint.Style.STROKE);
-        mBorderPaint.setStrokeWidth(mBorderWidth);
-        mBorderPaint.setColor(mBorderColor);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         if (getDrawable()==null) return;
+        //图片paint
+        mBitmapPaint = new Paint();
+        mBitmapPaint.setAntiAlias(true);
+        //边框paint
+        if (type != TYPE.CIRCLE || type != TYPE.ROUND) {
+            mBorderPaint = new Paint();
+            mBorderPaint.setAntiAlias(true);
+            mBorderPaint.setStyle(Paint.Style.STROKE);
+            mBorderPaint.setStrokeWidth(mBorderWidth);
+            mBorderPaint.setColor(mBorderColor);
+        }
         mDrawableRect.set(calculateBounds());
         Bitmap bitmap = ((BitmapDrawable) getDrawable()).getBitmap();
         float scale = calculateBitmapScale(bitmap);

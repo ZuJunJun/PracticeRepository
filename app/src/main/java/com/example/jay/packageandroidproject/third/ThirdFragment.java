@@ -31,7 +31,6 @@ public class ThirdFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_third, container, false);
     }
 
@@ -69,25 +68,25 @@ public class ThirdFragment extends Fragment implements View.OnClickListener {
             case R.id.tv5:
                 if (mView.getType() == XCircleImageView.TYPE.BORDER_CIRCLE
                         || mView.getType() == XCircleImageView.TYPE.BORDER_ROUND) {
-                    mView.setmBorderColor(Color.RED);
+                    mView.setBorderColor(Color.RED);
                 }
                 break;
             case R.id.tv6:
                 if (mView.getType() == XCircleImageView.TYPE.BORDER_CIRCLE
                         || mView.getType() == XCircleImageView.TYPE.BORDER_ROUND) {
-                    mView.setmBorderColor(Color.BLUE);
+                    mView.setBorderColor(Color.BLUE);
                 }
                 break;
             case R.id.tv7:
                 if (mView.getType() == XCircleImageView.TYPE.BORDER_CIRCLE
                         || mView.getType() == XCircleImageView.TYPE.BORDER_ROUND) {
-                    mView.setmBorderColor(Color.YELLOW);
+                    mView.setBorderColor(Color.YELLOW);
                 }
                 break;
             case R.id.tv8:
                 if (mView.getType() == XCircleImageView.TYPE.BORDER_CIRCLE
                         || mView.getType() == XCircleImageView.TYPE.BORDER_ROUND) {
-                    mView.setmBorderColor(Color.GREEN);
+                    mView.setBorderColor(Color.GREEN);
                 }
                 break;
         }
