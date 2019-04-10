@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ZHU</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">我就是我</string>
+    <string name="dismiss_advert">跳 过 广 告</string>
+</resources>
