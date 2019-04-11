@@ -1,0 +1,1 @@
+尝试使用vi添加readme.text文件
