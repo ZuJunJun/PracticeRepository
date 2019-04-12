@@ -1,6 +1,9 @@
 package com.example.jay.packageandroidproject.main;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
@@ -12,6 +15,7 @@ import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.ashokvarma.bottomnavigation.TextBadgeItem;
 import com.example.jay.packageandroidproject.R;
+import com.example.jay.packageandroidproject.base.Constant;
 import com.example.jay.packageandroidproject.base.XActivity;
 import com.example.jay.packageandroidproject.first.HomeFragment;
 import com.example.jay.packageandroidproject.fourth.FourthFragment;
@@ -36,6 +40,7 @@ public class MainActivity extends XActivity implements BottomNavigationBar.OnTab
     }
 
     private void init() {
+        createNotificationChannel();
         badgeItem = new TextBadgeItem().setBackgroundColorResource(R.color.colorPrimaryDark)
                 .setTextColorResource(R.color.colorWhite).setText("5");
         mBotNavigationBar = findViewById(R.id.bot_nav_bar);
@@ -49,6 +54,22 @@ public class MainActivity extends XActivity implements BottomNavigationBar.OnTab
                 .initialise();
         mBotNavigationBar.setTabSelectedListener(this);
         loadFragment(fragments[0]);
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+            String chatName = "聊天消息";
+            int high = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel notificationChannel = new NotificationChannel(Constant.CHAT_ID, chatName, high);
+            notificationManager.createNotificationChannel(notificationChannel);
+
+            String defaultName = "普通消息";
+            int mDefault = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel notificationDefaultChannel = new NotificationChannel(Constant.DEFAULT_ID, defaultName, mDefault);
+            notificationManager.createNotificationChannel(notificationDefaultChannel);
+        }
     }
 
     @Override
