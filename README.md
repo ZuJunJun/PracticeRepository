@@ -12,3 +12,4 @@
 		   带着妻子一起
 		     浪子回头
 	一会要用--no-ff禁用fast forward模式提交分支
+	一会要用fast forward模式提交分支
