@@ -54,7 +54,6 @@ public class FourthFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         notificationManager = ((NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE));
         view.findViewById(R.id.category_one).setOnClickListener(new View.OnClickListener() {
-            @TargetApi(Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 sendDefaultNotification();
@@ -68,14 +67,15 @@ public class FourthFragment extends Fragment {
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendDefaultNotification() {
-        NotificationChannel notificationChannel = notificationManager.getNotificationChannel(Constant.CHAT_ID);
-        if (notificationChannel.getImportance()==NotificationManager.IMPORTANCE_NONE) {
-            Intent intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
-            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getActivity().getPackageName());
-            intent.putExtra(Settings.EXTRA_CHANNEL_ID, notificationChannel.getId());
-            startActivity(intent);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = notificationManager.getNotificationChannel(Constant.CHAT_ID);
+            if (notificationChannel.getImportance()==NotificationManager.IMPORTANCE_NONE) {
+                Intent intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE, getActivity().getPackageName());
+                intent.putExtra(Settings.EXTRA_CHANNEL_ID, notificationChannel.getId());
+                startActivity(intent);
+            }
         }
         Notification notification = new NotificationCompat.Builder(getContext(), Constant.CHAT_ID)
                 .setContentTitle("你收到一条聊天消息")
@@ -87,6 +87,7 @@ public class FourthFragment extends Fragment {
                 .build();
         notificationManager.notify(1,notification);
     }
+
 
     private void sendChatNotification() {
         Notification notification = new NotificationCompat.Builder(getContext(), Constant.DEFAULT_ID)

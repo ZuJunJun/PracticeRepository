@@ -21,6 +21,7 @@ import com.example.jay.packageandroidproject.first.HomeFragment;
 import com.example.jay.packageandroidproject.fourth.FourthFragment;
 import com.example.jay.packageandroidproject.second.SecondFragment;
 import com.example.jay.packageandroidproject.third.ThirdFragment;
+import com.example.jay.packageandroidproject.util.NotificationUtil;
 import com.example.jay.packageandroidproject.util.StatusBarUtil;
 
 public class MainActivity extends XActivity implements BottomNavigationBar.OnTabSelectedListener {
@@ -36,11 +37,11 @@ public class MainActivity extends XActivity implements BottomNavigationBar.OnTab
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         hideActionBar();
+        NotificationUtil.createNotificationCategory(this);
         init();
     }
 
     private void init() {
-        createNotificationChannel();
         badgeItem = new TextBadgeItem().setBackgroundColorResource(R.color.colorPrimaryDark)
                 .setTextColorResource(R.color.colorWhite).setText("5");
         mBotNavigationBar = findViewById(R.id.bot_nav_bar);
@@ -57,19 +58,7 @@ public class MainActivity extends XActivity implements BottomNavigationBar.OnTab
     }
 
     private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-            String chatName = "聊天消息";
-            int high = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel notificationChannel = new NotificationChannel(Constant.CHAT_ID, chatName, high);
-            notificationManager.createNotificationChannel(notificationChannel);
-
-            String defaultName = "普通消息";
-            int mDefault = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel notificationDefaultChannel = new NotificationChannel(Constant.DEFAULT_ID, defaultName, mDefault);
-            notificationManager.createNotificationChannel(notificationDefaultChannel);
-        }
     }
 
     @Override
