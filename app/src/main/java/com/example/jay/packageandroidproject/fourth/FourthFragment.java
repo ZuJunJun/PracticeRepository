@@ -27,6 +27,7 @@ import android.widget.TextView;
 
 import com.example.jay.packageandroidproject.R;
 import com.example.jay.packageandroidproject.base.Constant;
+import com.example.jay.packageandroidproject.util.NotificationUtil;
 
 
 /**
@@ -54,6 +55,14 @@ public class FourthFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         notificationManager = ((NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE));
         view.findViewById(R.id.category_one).setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                sendChatNotification();
+            }
+        });
+        view.findViewById(R.id.category_three).setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 sendDefaultNotification();
@@ -62,42 +71,23 @@ public class FourthFragment extends Fragment {
         view.findViewById(R.id.category_two).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendChatNotification();
+                sendLowerONotification();
             }
         });
     }
 
-    private void sendDefaultNotification() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel notificationChannel = notificationManager.getNotificationChannel(Constant.CHAT_ID);
-            if (notificationChannel.getImportance()==NotificationManager.IMPORTANCE_NONE) {
-                Intent intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
-                intent.putExtra(Settings.EXTRA_APP_PACKAGE, getActivity().getPackageName());
-                intent.putExtra(Settings.EXTRA_CHANNEL_ID, notificationChannel.getId());
-                startActivity(intent);
-            }
-        }
-        Notification notification = new NotificationCompat.Builder(getContext(), Constant.CHAT_ID)
-                .setContentTitle("你收到一条聊天消息")
-                .setContentText("今天中午吃啥呢？")
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher))
-                .setAutoCancel(true)
-                .build();
-        notificationManager.notify(1,notification);
+    private void sendLowerONotification() {
+        NotificationUtil.sendNotification(getContext());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void sendChatNotification() {
+        NotificationUtil.sendNotification(getContext(),Constant.CHAT_ID);
     }
 
 
-    private void sendChatNotification() {
-        Notification notification = new NotificationCompat.Builder(getContext(), Constant.DEFAULT_ID)
-                .setContentTitle("你收到一条普通消息")
-                .setContentText("卧槽？！听说你买房啦？")
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher))
-                .setAutoCancel(true)
-                .build();
-        notificationManager.notify(2,notification);
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void sendDefaultNotification() {
+        NotificationUtil.sendNotification(getContext(),Constant.DEFAULT_ID);
     }
 }
