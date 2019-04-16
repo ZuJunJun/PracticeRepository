@@ -25,16 +25,16 @@
             android:layout_marginTop="32.5dp"/>
         <TextView
             android:id="@+id/focused"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
+            android:visibility="gone"
             android:textColor="@color/colorWhite"
             android:textSize="12sp"
             android:gravity="center"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
             android:layout_gravity="center_horizontal"
-            android:background="@color/colorRed"
+            android:background="@drawable/shape_focused"
             android:layout_marginTop="32.5dp"
             android:text="已关注"/>
     </FrameLayout>

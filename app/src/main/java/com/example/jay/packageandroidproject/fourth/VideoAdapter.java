@@ -15,13 +15,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.example.jay.packageandroidproject.R;
 import com.example.jay.packageandroidproject.bean.VideoBean;
-import com.example.jay.packageandroidproject.main.MainActivity;
 import com.example.jay.packageandroidproject.util.UICommonUtil;
 import com.example.jay.packageandroidproject.view.CircleAddView;
 import com.example.jay.packageandroidproject.view.CommentPopupWindow;
@@ -37,6 +36,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private LayoutInflater inflater;
     private VideoHolder holder;
     private MediaPlayer mediaPlayer;
+    private ObjectAnimator mMusicalPhotoRotationAnim;
 
     public VideoAdapter(Context mCtx, List<VideoBean> mVideos) {
         this.mCtx = mCtx;
@@ -61,18 +61,18 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 public void onPrepared(MediaPlayer mp) {
                     mediaPlayer = mp;
                     ((VideoHolder) holder).mVideoView.start();
-                    ObjectAnimator sunRotationAnim = ObjectAnimator.ofFloat(((VideoHolder) holder).mMsuicalPhoto, "rotation", 0f, 360f);
-                    sunRotationAnim.setDuration(5000);
-                    sunRotationAnim.setRepeatCount(-1);
-                    sunRotationAnim.setInterpolator(new LinearInterpolator());
-                    sunRotationAnim.start();
+                    mMusicalPhotoRotationAnim = ObjectAnimator.ofFloat(((VideoHolder) holder).mMusicalPhoto, "rotation", 0f, 360f);
+                    mMusicalPhotoRotationAnim.setDuration(5000);
+                    mMusicalPhotoRotationAnim.setRepeatCount(-1);
+                    mMusicalPhotoRotationAnim.setInterpolator(new LinearInterpolator());
+                    mMusicalPhotoRotationAnim.start();
                 }
             });
             ((VideoHolder) holder).mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer mp, int what, int extra) {
                     Toast.makeText(mCtx, "无法播发此视频", Toast.LENGTH_SHORT).show();
-                    return false;
+                    return true;
                 }
             });
             ((VideoHolder) holder).mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -92,20 +92,20 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 @Override
                 public void onClick(View v) {
                     Drawable drawable = ContextCompat.getDrawable(mCtx, R.mipmap.lovely_l);
-                    ((VideoHolder) holder).mLovely.setCompoundDrawablesWithIntrinsicBounds(null,drawable,null,null);
+                    ((VideoHolder) holder).mLovely.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
                 }
             });
             ((VideoHolder) holder).mComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     CommentPopupWindow commentPopupWindow = new CommentPopupWindow(mCtx);
-                    commentPopupWindow.showAtLocation(((VideoHolder) holder).mVideoView, Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL, 0, UICommonUtil.dp2px(mCtx,50));
+                    commentPopupWindow.showAtLocation(((VideoHolder) holder).mVideoView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, UICommonUtil.dp2px(mCtx, 50));
                 }
             });
             ((VideoHolder) holder).mShare.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    shareText("分享到","",mUrl);
+                    shareText("分享到", "", mUrl);
                 }
             });
             ((VideoHolder) holder).mFocusCv.setOnClickListener(new View.OnClickListener() {
@@ -130,19 +130,23 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         return mVideos == null ? 0 : mVideos.size();
     }
 
-    public void setVideoPause(){
+    public void setVideoPause() {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
+            if (mMusicalPhotoRotationAnim.isRunning()) {
+                mMusicalPhotoRotationAnim.pause();
+            }
         }
     }
 
-    public void setVideoStart(){
+    public void setVideoStart() {
         if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
             mediaPlayer.start();
+            mMusicalPhotoRotationAnim.resume();
         }
     }
 
-    public void releaseMediaPlayer(){
+    public void releaseMediaPlayer() {
         if (mediaPlayer != null) {
             mediaPlayer.release();
         }
@@ -172,6 +176,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public class VideoHolder extends RecyclerView.ViewHolder {
 
+        private ImageView pauseIv;
         private CircleAddView mFocusCv;
         private TextView mFocusedTv;
         private XVideoView mVideoView;
@@ -182,7 +187,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private TextView mVideoName;
         private TextView mVideoFrom;
         private TextView mVideoMusical;
-        private XCircleImageView mMsuicalPhoto;
+        private XCircleImageView mMusicalPhoto;
 
         public VideoHolder(@NonNull View itemView) {
             super(itemView);
@@ -194,20 +199,26 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             mVideoName = itemView.findViewById(R.id.video_name);
             mVideoFrom = itemView.findViewById(R.id.video_from);
             mVideoMusical = itemView.findViewById(R.id.video_musical);
-            mMsuicalPhoto = itemView.findViewById(R.id.musical_photo);
+            mMusicalPhoto = itemView.findViewById(R.id.musical_photo);
             mFocusCv = itemView.findViewById(R.id.focus);
             mFocusedTv = itemView.findViewById(R.id.focused);
+            pauseIv = itemView.findViewById(R.id.pause);
         }
     }
 
     public void isPraiseVideo(final VideoHolder mHolder) {
+
         mHolder.mVideoView.setOnClickNumListener(new XVideoView.OnClickNumListener() {
             @Override
             public void onSingleClickListener() {
                 if (mHolder.mVideoView.isPlaying()) {
                     mHolder.mVideoView.pause();
+                    mMusicalPhotoRotationAnim.pause();
+                    mHolder.pauseIv.setVisibility(View.VISIBLE);
                 } else {
                     mHolder.mVideoView.start();
+                    mMusicalPhotoRotationAnim.resume();
+                    mHolder.pauseIv.setVisibility(View.GONE);
                 }
             }
 
@@ -215,7 +226,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             @Override
             public void onDoubleClickListener() {
                 Drawable drawable = ContextCompat.getDrawable(mCtx, R.mipmap.lovely_l);
-                mHolder.mLovely.setCompoundDrawablesWithIntrinsicBounds(null,drawable,null,null);
+                mHolder.mLovely.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
             }
         });
     }
