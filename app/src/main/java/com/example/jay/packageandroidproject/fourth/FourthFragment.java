@@ -16,6 +16,9 @@ import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -24,10 +27,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jay.packageandroidproject.R;
 import com.example.jay.packageandroidproject.base.Constant;
 import com.example.jay.packageandroidproject.util.NotificationUtil;
+import com.example.jay.packageandroidproject.util.VideoUtil;
 
 
 /**
@@ -37,6 +42,8 @@ public class FourthFragment extends Fragment {
 
 
     private NotificationManager notificationManager;
+    private RecyclerView mVideoRecyclerView;
+    private VideoAdapter videoAdapter;
 
     public static FourthFragment newInstance() {
         FourthFragment messageFragment = new FourthFragment();
@@ -53,6 +60,33 @@ public class FourthFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+//        sendNotification(view);
+        mVideoRecyclerView = view.findViewById(R.id.video_recycler_view);
+        mVideoRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mVideoRecyclerView.setNestedScrollingEnabled(false);
+        PagerSnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(mVideoRecyclerView);
+        videoAdapter = new VideoAdapter(getContext(), VideoUtil.getDatas());
+        mVideoRecyclerView.setAdapter(videoAdapter);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) {
+            videoAdapter.setVideoPause();
+        }else {
+            videoAdapter.setVideoStart();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        videoAdapter.releaseMediaPlayer();
+    }
+
+    private void sendNotification(View view) {
         notificationManager = ((NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE));
         view.findViewById(R.id.category_one).setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)

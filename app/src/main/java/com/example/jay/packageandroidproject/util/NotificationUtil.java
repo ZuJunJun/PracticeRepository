@@ -19,7 +19,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 public class NotificationUtil {
     /*创建通知栏分类*/
     public static void createNotificationCategory(Context mCtx) {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager = (NotificationManager) mCtx.getSystemService(NOTIFICATION_SERVICE);
 
             String chatName = "聊天消息";

@@ -6,6 +6,7 @@
     tools:context=".fourth.FourthFragment"
     android:orientation="vertical">
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal">
@@ -28,5 +29,9 @@
             android:layout_weight="1"
             android:text="发送O以下通知"/>
     </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/video_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
