@@ -1,16 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
+    android:background="@color/transparent"
     android:gravity="center_horizontal"
     android:padding="5dp">
-    <com.example.jay.packageandroidproject.view.XCircleImageView
-        android:id="@+id/video_header"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@mipmap/pp"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.example.jay.packageandroidproject.view.XCircleImageView
+            android:id="@+id/video_header"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:border_width="1dp"
+            app:border_color="@color/colorWhite"
+            android:src="@mipmap/pp"/>
+        <com.example.jay.packageandroidproject.view.CircleAddView
+            android:id="@+id/focus"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="32.5dp"/>
+        <TextView
+            android:id="@+id/focused"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:textColor="@color/colorWhite"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/colorRed"
+            android:layout_marginTop="32.5dp"
+            android:text="已关注"/>
+    </FrameLayout>
 
     <TextView
         android:layout_marginTop="20dp"

@@ -31,7 +31,7 @@ public class XCircleImageView extends ImageView {
     private Paint mBitmapPaint;
     private Paint mBorderPaint;
     private RectF mDrawableRect = new RectF();
-    private TYPE type = TYPE.CIRCLE;
+    private TYPE type = TYPE.BORDER_CIRCLE;
     private RectF mRoundRect;
 
     public enum TYPE{
