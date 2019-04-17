@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.jay.packageandroidproject">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name=".main.XApplication"
@@ -14,14 +14,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!--全面屏比-->
+        <!-- 全面屏比 -->
         <meta-data
             android:name="android.max_aspect"
             android:value="2.8" />
 
         <activity
             android:name=".main.MainActivity"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,20 +31,26 @@
         <activity
             android:name=".main.WelcomeActivity"
             android:theme="@style/WelcomeActivityStyle">
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
         <activity android:name=".base.XActivity" />
-        <activity android:name=".main.AdvertActivity"
-            android:theme="@style/WelcomeActivityStyle"/>
+        <activity
+            android:name=".main.AdvertActivity"
+            android:theme="@style/WelcomeActivityStyle" />
+
         <receiver android:name=".ding.DingBroadcastReceiver">
             <intent-filter>
-                <action android:name="ANDROID_DING_MESSAGE"/>
+                <action android:name="ANDROID_DING_MESSAGE" />
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>
