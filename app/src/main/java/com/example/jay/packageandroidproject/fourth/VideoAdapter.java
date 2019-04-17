@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.jay.packageandroidproject.R;
 import com.example.jay.packageandroidproject.bean.VideoBean;
 import com.example.jay.packageandroidproject.util.UICommonUtil;
+import com.example.jay.packageandroidproject.view.AnimCircleImageView;
 import com.example.jay.packageandroidproject.view.CircleAddView;
 import com.example.jay.packageandroidproject.view.CommentPopupWindow;
 import com.example.jay.packageandroidproject.view.XCircleImageView;
@@ -36,7 +37,6 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private LayoutInflater inflater;
     private VideoHolder holder;
     private MediaPlayer mediaPlayer;
-    private ObjectAnimator mMusicalPhotoRotationAnim;
 
     public VideoAdapter(Context mCtx, List<VideoBean> mVideos) {
         this.mCtx = mCtx;
@@ -61,11 +61,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 public void onPrepared(MediaPlayer mp) {
                     mediaPlayer = mp;
                     ((VideoHolder) holder).mVideoView.start();
-                    mMusicalPhotoRotationAnim = ObjectAnimator.ofFloat(((VideoHolder) holder).mMusicalPhoto, "rotation", 0f, 360f);
-                    mMusicalPhotoRotationAnim.setDuration(5000);
-                    mMusicalPhotoRotationAnim.setRepeatCount(-1);
-                    mMusicalPhotoRotationAnim.setInterpolator(new LinearInterpolator());
-                    mMusicalPhotoRotationAnim.start();
+                    ((VideoHolder) holder).mMusicalPhoto.setAnimStart();
                 }
             });
             ((VideoHolder) holder).mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
@@ -133,16 +129,12 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void setVideoPause() {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
-            if (mMusicalPhotoRotationAnim.isRunning()) {
-                mMusicalPhotoRotationAnim.pause();
-            }
         }
     }
 
     public void setVideoStart() {
         if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
             mediaPlayer.start();
-            mMusicalPhotoRotationAnim.resume();
         }
     }
 
@@ -187,7 +179,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private TextView mVideoName;
         private TextView mVideoFrom;
         private TextView mVideoMusical;
-        private XCircleImageView mMusicalPhoto;
+        private AnimCircleImageView mMusicalPhoto;
 
         public VideoHolder(@NonNull View itemView) {
             super(itemView);
@@ -213,12 +205,12 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             public void onSingleClickListener() {
                 if (mHolder.mVideoView.isPlaying()) {
                     mHolder.mVideoView.pause();
-                    mMusicalPhotoRotationAnim.pause();
                     mHolder.pauseIv.setVisibility(View.VISIBLE);
+                    mHolder.mMusicalPhoto.setAnimPause();
                 } else {
                     mHolder.mVideoView.start();
-                    mMusicalPhotoRotationAnim.resume();
                     mHolder.pauseIv.setVisibility(View.GONE);
+                    mHolder.mMusicalPhoto.setAnimResume();
                 }
             }
 

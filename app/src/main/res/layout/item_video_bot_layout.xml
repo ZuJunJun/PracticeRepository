@@ -40,7 +40,7 @@
             android:textColor="@color/colorWhite"
             android:drawableLeft="@mipmap/musical"/>
     </LinearLayout>
-    <com.example.jay.packageandroidproject.view.XCircleImageView
+    <com.example.jay.packageandroidproject.view.AnimCircleImageView
         android:id="@+id/musical_photo"
         android:layout_width="50dp"
         android:layout_height="50dp"

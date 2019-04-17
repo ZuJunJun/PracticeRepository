@@ -1,21 +1,15 @@
 package com.example.jay.packageandroidproject.main;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Intent;
-import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.widget.Toast;
-
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.ashokvarma.bottomnavigation.TextBadgeItem;
 import com.example.jay.packageandroidproject.R;
-import com.example.jay.packageandroidproject.base.Constant;
 import com.example.jay.packageandroidproject.base.XActivity;
 import com.example.jay.packageandroidproject.first.HomeFragment;
 import com.example.jay.packageandroidproject.fourth.FourthFragment;

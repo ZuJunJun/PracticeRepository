@@ -1,6 +1,8 @@
 package com.example.jay.packageandroidproject.first;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.jay.packageandroidproject.R;
+import com.example.jay.packageandroidproject.ding.DingBroadcastReceiver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +88,13 @@ public class HomeFragment extends Fragment {
                         mRefreshLayout.setRefreshing(false);
                     }
                 }, 5000);
+            }
+        });
+        view.findViewById(R.id.add).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent in = new Intent("ANDROID_DING_MESSAGE");
+                mCtx.sendBroadcast(in);
             }
         });
     }
