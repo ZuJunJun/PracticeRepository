@@ -7,7 +7,6 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -25,61 +24,28 @@ import com.example.jay.packageandroidproject.R;
 public class AnimCircleImageView extends ImageView {
 
     private float mCircleRadius;
-    private float mRoundRadius;
-    private float mBorderWidth;
-    private int mBorderColor;
     private Paint mBitmapPaint;
-    private Paint mBorderPaint;
     private RectF mDrawableRect = new RectF();
     private TYPE type = TYPE.CIRCLE;
     private RectF mRoundRect;
     private ObjectAnimator mMusicalPhotoRotationAnim;
 
     public enum TYPE {
-        CIRCLE, ROUND, BORDER_CIRCLE, BORDER_ROUND
-    }
-
-    public void setType(TYPE type) {
-        this.type = type;
-        invalidate();
-    }
-
-    public TYPE getType() {
-        return type;
-    }
-
-    public void setBorderColor(int mBorderColor) {
-        this.mBorderColor = mBorderColor;
-        invalidate();
-    }
-
-    public void setRoundRadius(float mRoundRadius) {
-        this.mRoundRadius = mRoundRadius;
-        invalidate();
+        CIRCLE
     }
 
     public AnimCircleImageView(Context context) {
         super(context);
-        init(context, null);
     }
 
     public AnimCircleImageView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
     }
 
     public AnimCircleImageView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
     }
 
-    private void init(Context mCtx, @Nullable AttributeSet attrs) {
-        TypedArray a = mCtx.obtainStyledAttributes(attrs, R.styleable.XCircleImageView);
-        mRoundRadius = a.getDimension(R.styleable.XCircleImageView_xround_radius, 0);
-        mBorderWidth = a.getDimension(R.styleable.XCircleImageView_border_width, 0);
-        mBorderColor = a.getColor(R.styleable.XCircleImageView_border_color, Color.RED);
-        a.recycle();
-    }
 
     public void setAnimPause(){
         if (mMusicalPhotoRotationAnim != null) {
@@ -114,14 +80,7 @@ public class AnimCircleImageView extends ImageView {
         //图片paint
         mBitmapPaint = new Paint();
         mBitmapPaint.setAntiAlias(true);
-        //边框paint
-        if (type != TYPE.CIRCLE || type != TYPE.ROUND) {
-            mBorderPaint = new Paint();
-            mBorderPaint.setAntiAlias(true);
-            mBorderPaint.setStyle(Paint.Style.STROKE);
-            mBorderPaint.setStrokeWidth(mBorderWidth);
-            mBorderPaint.setColor(mBorderColor);
-        }
+
         mDrawableRect.set(calculateBounds());
         Bitmap bitmap = ((BitmapDrawable) getDrawable()).getBitmap();
         float scale = calculateBitmapScale(bitmap);
@@ -136,33 +95,15 @@ public class AnimCircleImageView extends ImageView {
         mBitmapPaint.setShader(shader);
         if (type == TYPE.CIRCLE) {
             canvas.drawCircle(mDrawableRect.centerX(), mDrawableRect.centerY(), mCircleRadius, mBitmapPaint);
-        } else if (type == TYPE.ROUND) {
-            mRoundRect = new RectF(0, 0, getWidth(), getHeight());
-            canvas.drawRoundRect(mRoundRect, mRoundRadius, mRoundRadius, mBitmapPaint);
-        } else if (type == TYPE.BORDER_CIRCLE) {
-            canvas.drawCircle(mDrawableRect.centerX(), mDrawableRect.centerY(), mCircleRadius - mBorderWidth, mBitmapPaint);
-            if (mBorderWidth >= 0)
-                canvas.drawCircle(mDrawableRect.centerX(), mDrawableRect.centerY(), mCircleRadius - mBorderWidth / 2, mBorderPaint);
-        } else if (type == TYPE.BORDER_ROUND) {
-            RectF mRect = new RectF(0 + mBorderWidth, 0 + mBorderWidth, getWidth() - mBorderWidth, getHeight() - mBorderWidth);
-            mRoundRect = new RectF(0 + mBorderWidth / 2, 0 + mBorderWidth / 2, getWidth() - mBorderWidth / 2, getHeight() - mBorderWidth / 2);
-            canvas.drawRoundRect(mRect, mRoundRadius, mRoundRadius, mBitmapPaint);
-            canvas.drawRoundRect(mRoundRect, mRoundRadius, mRoundRadius, mBorderPaint);
         }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (type == TYPE.CIRCLE || type == TYPE.BORDER_CIRCLE) {
+        if (type == TYPE.CIRCLE) {
             return inTouchableArea(event.getX(), event.getY()) && super.onTouchEvent(event);
-        } else if (type == TYPE.CIRCLE || type == TYPE.BORDER_CIRCLE) {
-            return inRectArea(event.getX(), event.getY()) && super.onTouchEvent(event);
         }
         return super.onTouchEvent(event);
-    }
-
-    private boolean inRectArea(float x, float y) {
-        return mRoundRect.contains(x, y);
     }
 
     private boolean inTouchableArea(float x, float y) {
@@ -173,7 +114,7 @@ public class AnimCircleImageView extends ImageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (type == TYPE.CIRCLE || type == TYPE.BORDER_CIRCLE) {
+        if (type == TYPE.CIRCLE) {
             int mSize = Math.min(getMeasuredWidth(), getMeasuredHeight());
             mCircleRadius = mSize / 2;
             setMeasuredDimension(mSize, mSize);//实际的大小
@@ -194,18 +135,10 @@ public class AnimCircleImageView extends ImageView {
      */
     private float calculateBitmapScale(Bitmap bitmap) {
         float scale = 1.0f;
-        if (type == TYPE.CIRCLE || type == TYPE.BORDER_CIRCLE) {
+        if (type == TYPE.CIRCLE) {
             int bSize = Math.min(bitmap.getWidth(), bitmap.getHeight());
             scale = mCircleRadius * 2.0f / bSize;
             return scale;
-        } else if (type == TYPE.ROUND || type == TYPE.BORDER_ROUND) {
-            // 如果Bitmap的宽或者高与view的宽高不匹配，计算出需要缩放的比例；缩放后的Bitmap的宽高，一定要【大于】view的宽高
-            if (bitmap.getWidth() != getWidth() || bitmap.getHeight() != getHeight()) {
-                float scaleWidth = getWidth() * 1.0f / bitmap.getWidth();
-                float scaleHeight = getHeight() * 1.0f / bitmap.getHeight();
-                scale = Math.max(scaleWidth, scaleHeight);
-                return scale;
-            }
         }
         return scale;
     }

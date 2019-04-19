@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -118,6 +119,19 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     ((VideoHolder) holder).mFocusedTv.setVisibility(View.GONE);
                 }
             });
+            ((VideoHolder) holder).mVideoView.setOnDeatachListener(new XVideoView.OnDeatachListener() {
+                @Override
+                public void onDetachListener() {
+                    resetItemView(((VideoHolder) holder));
+                }
+            });
+        }
+    }
+
+    private void resetItemView(VideoHolder mHolder) {
+        mHolder.mMusicalPhoto.setAnimPause();
+        if (mHolder.pauseIv.getVisibility() == View.VISIBLE) {
+            mHolder.pauseIv.setVisibility(View.GONE);
         }
     }
 
@@ -200,7 +214,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public void isPraiseVideo(final VideoHolder mHolder) {
 
-        mHolder.mVideoView.setOnClickNumListener(new XVideoView.OnClickNumListener() {
+        mHolder.mVideoView.setOnClickNumListener(mCtx,new XVideoView.OnClickNumListener() {
             @Override
             public void onSingleClickListener() {
                 if (mHolder.mVideoView.isPlaying()) {

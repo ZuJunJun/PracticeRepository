@@ -16,6 +16,7 @@ import com.example.jay.packageandroidproject.fourth.FourthFragment;
 import com.example.jay.packageandroidproject.second.SecondFragment;
 import com.example.jay.packageandroidproject.third.ThirdFragment;
 import com.example.jay.packageandroidproject.util.NotificationUtil;
+import com.example.jay.packageandroidproject.util.PermissionsUtil;
 import com.example.jay.packageandroidproject.util.StatusBarUtil;
 
 public class MainActivity extends XActivity implements BottomNavigationBar.OnTabSelectedListener {
@@ -31,6 +32,12 @@ public class MainActivity extends XActivity implements BottomNavigationBar.OnTab
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         hideActionBar();
+        PermissionsUtil.checkXPermissions(this, new PermissionsUtil.NonePermissions2Apply() {
+            @Override
+            public void onNonePermissions2Apply() {
+
+            }
+        });
         NotificationUtil.createNotificationCategory(this);
         init();
     }

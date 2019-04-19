@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/open_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="打开Media所有" />
+
+    <Button
+        android:id="@+id/take_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="单独拍照" />
+
+    <Button
+        android:id="@+id/take_video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="录制视频" />
+
+    <Button
+        android:id="@+id/open_audio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="打开音频" />
+
+</LinearLayout>

@@ -4,6 +4,7 @@ package com.example.jay.packageandroidproject.second;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.jay.packageandroidproject.R;
 import com.example.jay.packageandroidproject.util.UICommonUtil;
+import com.example.jay.packageandroidproject.wechat.WeChatMediaActivity;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -56,6 +58,13 @@ public class SecondFragment extends Fragment {
         displayMetrics = getResources().getDisplayMetrics();
         rotateIv = view.findViewById(R.id.second_iv);
         startAnimation();
+        view.findViewById(R.id.second_iv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), WeChatMediaActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private double mInch = 0;
