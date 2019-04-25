@@ -58,7 +58,6 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int i) {
         if (holder instanceof VideoHolder) {
-            Log.e("zjj", "onBindViewHolder: 11111" );
             final String mUrl = mVideos.get(i).mUrl;
             gsyVideoOptionBuilder = new GSYVideoOptionBuilder();
             gsyVideoOptionBuilder.setPlayPosition(i)
