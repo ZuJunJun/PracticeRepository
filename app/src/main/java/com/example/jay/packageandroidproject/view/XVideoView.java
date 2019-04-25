@@ -11,20 +11,23 @@ import android.view.View;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-public class XVideoView extends VideoView{
+public class XVideoView extends VideoView implements View.OnTouchListener {
     private GestureDetector detector;
-    private Context mCtx;
 
     public XVideoView(Context context) {
         super(context);
+        init(context);
+
     }
 
     public XVideoView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init(context);
     }
 
     public XVideoView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init(context);
     }
 
     @Override
@@ -35,48 +38,34 @@ public class XVideoView extends VideoView{
     }
 
     public OnClickNumListener onClickNumListener;
-    public OnDeatachListener onDeatachListener;
+    public OnDetachListener onDetachListener;
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        detector.onTouchEvent(event);
+        return false;
+    }
 
     public interface OnClickNumListener{
         void onSingleClickListener();
         void onDoubleClickListener();
     }
 
-    public interface OnDeatachListener{
+    public interface OnDetachListener{
         void onDetachListener();
     }
 
-    public void setOnClickNumListener(Context mCtx,OnClickNumListener onClickNumListener) {
-        this.mCtx = mCtx;
+    public void setOnClickNumListener(OnClickNumListener onClickNumListener) {
         this.onClickNumListener = onClickNumListener;
-        init(mCtx);
     }
 
-    public void setOnDeatachListener(OnDeatachListener onDeatachListener) {
-        this.onDeatachListener = onDeatachListener;
+    public void setOnDetachListener(OnDetachListener onDetachListener) {
+        this.onDetachListener = onDetachListener;
     }
 
     private void init(Context mCtx) {
         this.setClickable(true);
         detector = new GestureDetector(mCtx, new GestureDetector.SimpleOnGestureListener(){
-            @Override
-            public boolean onFling(MotionEvent e1, MotionEvent e2,      //滑动事件
-                                   float velocityX, float velocityY) {
-                if(Math.abs(velocityX) > Math.abs(velocityY)){   //如果X偏移量大于Y偏移量
-                    if(velocityX > 0){
-//                        Toast.makeText(getContext(), "Right Fling", Toast.LENGTH_SHORT).show();
-                    }else{
-//                        Toast.makeText(getContext(), "Left Fling", Toast.LENGTH_SHORT).show();
-                    }
-                }else{
-                    if(velocityY > 0){
-//                        Toast.makeText(getContext(), "Down Fling", Toast.LENGTH_SHORT).show();
-                    }else{
-//                        Toast.makeText(getContext(), "Up Fling", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                return super.onFling(e1, e2, velocityX, velocityY);
-            }
 
             @Override
             public boolean onDoubleTap(MotionEvent e) {
@@ -98,14 +87,16 @@ public class XVideoView extends VideoView{
         this.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                return detector.onTouchEvent(event);
+                detector.onTouchEvent(event);
+                return false;
             }
         });
     }
 
+
     @Override
     protected void onDetachedFromWindow() {
-        onDeatachListener.onDetachListener();
+        onDetachListener.onDetachListener();
         super.onDetachedFromWindow();
     }
 }

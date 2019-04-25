@@ -2,9 +2,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorRed">
-    <com.example.jay.packageandroidproject.view.XVideoView
+    android:background="@color/black">
+    <com.example.jay.packageandroidproject.view.EmptyControlVideo
         android:id="@+id/item_video_view"
+        android:clickable="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     <include

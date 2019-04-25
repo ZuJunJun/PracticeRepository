@@ -19,20 +19,19 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PagerSnapHelper;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.jay.packageandroidproject.R;
 import com.example.jay.packageandroidproject.base.Constant;
 import com.example.jay.packageandroidproject.util.NotificationUtil;
 import com.example.jay.packageandroidproject.util.VideoUtil;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.shuyu.gsyvideoplayer.utils.CommonUtil;
+import com.volokh.danylo.visibility_utils.calculator.DefaultSingleItemCalculatorCallback;
+import com.volokh.danylo.visibility_utils.calculator.SingleListViewItemActiveCalculator;
+import com.volokh.danylo.visibility_utils.scroll_utils.RecyclerViewItemPositionGetter;
 
 
 /**
@@ -44,12 +43,32 @@ public class FourthFragment extends Fragment {
     private NotificationManager notificationManager;
     private RecyclerView mVideoRecyclerView;
     private VideoAdapter videoAdapter;
+    private ScrollCalculatorHelper scrollCalculatorHelper;
 
     public static FourthFragment newInstance() {
         FourthFragment messageFragment = new FourthFragment();
         return messageFragment;
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) {
+            if (GSYVideoManager.instance().getCurPlayerManager() != null) {
+                GSYVideoManager.instance().getCurPlayerManager().pause();
+            }
+        }else {
+            if (GSYVideoManager.instance().getCurPlayerManager() != null) {
+                GSYVideoManager.instance().getCurPlayerManager().start();
+            }
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        GSYVideoManager.releaseAllVideos();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,27 +82,36 @@ public class FourthFragment extends Fragment {
 //        sendNotification(view);
         mVideoRecyclerView = view.findViewById(R.id.video_recycler_view);
         mVideoRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mVideoRecyclerView.setNestedScrollingEnabled(false);
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(mVideoRecyclerView);
         videoAdapter = new VideoAdapter(getContext(), VideoUtil.getDatas());
         mVideoRecyclerView.setAdapter(videoAdapter);
-    }
+        //限定范围为屏幕一半的上下偏移180
+        int playTop = CommonUtil.getScreenHeight(getContext()) / 2 - CommonUtil.dip2px(getContext(), 180);
+        int playBottom = CommonUtil.getScreenHeight(getContext()) / 2 + CommonUtil.dip2px(getContext(), 180);
+        //自定播放帮助类
+        scrollCalculatorHelper = new ScrollCalculatorHelper(R.id.item_video_view, playTop, playBottom);
+        mVideoRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (hidden) {
-            videoAdapter.setVideoPause();
-        }else {
-            videoAdapter.setVideoStart();
-        }
-    }
+//            int firstVisibleItem, lastVisibleItem;
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        videoAdapter.releaseMediaPlayer();
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                scrollCalculatorHelper.onScrollStateChanged(recyclerView, newState);
+                Log.e("zjj", "onScrollStateChanged: 222");
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                Log.e("zjj", "onScrollStateChanged: 333");
+//                firstVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+//                lastVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+//                //这是滑动自动播放的代码
+//                scrollCalculatorHelper.onScroll(recyclerView, firstVisibleItem, lastVisibleItem, lastVisibleItem - firstVisibleItem);
+            }
+        });
     }
 
     private void sendNotification(View view) {
@@ -116,12 +144,12 @@ public class FourthFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendChatNotification() {
-        NotificationUtil.sendNotification(getContext(),Constant.CHAT_ID);
+        NotificationUtil.sendNotification(getContext(), Constant.CHAT_ID);
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendDefaultNotification() {
-        NotificationUtil.sendNotification(getContext(),Constant.DEFAULT_ID);
+        NotificationUtil.sendNotification(getContext(), Constant.DEFAULT_ID);
     }
 }
